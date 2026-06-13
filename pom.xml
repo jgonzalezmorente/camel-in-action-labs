@@ -2,16 +2,218 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Modelo estándar de Maven -->
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Identificación de tu proyecto local de laboratorios -->
     <groupId>es.jagm</groupId>
     <artifactId>camel-in-action-labs</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <!--
+        Versiones centralizadas.
+        Mantener aquí las versiones evita repetirlas en cada dependencia/plugin.
+    -->
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+
+        <!--
+            Versión de Apache Camel.
+            El libro usa 2.25.4, pero mantenemos 2.24.3 porque en tu entorno
+            te está funcionando mejor y evita problemas de compatibilidad.
+        -->
+        <camel.version>2.24.3</camel.version>
+
+        <!-- ActiveMQ usado como broker JMS embebido con vm://localhost -->
+        <activemq.version>5.15.7</activemq.version>
+
+        <!-- Spring usado por camel-spring, camel-jms y ejemplos XML/Spring -->
+        <spring.version>5.1.20.RELEASE</spring.version>
+
+        <!-- Logging clásico usado en los ejemplos del libro -->
+        <slf4j.version>1.7.26</slf4j.version>
+        <log4j.version>1.2.17</log4j.version>
+
+        <!-- Necesario para algunos ejemplos con ActiveMQ/Spring XML -->
+        <xbean.version>4.5</xbean.version>
+
+        <!-- JUnit 4, porque CamelTestSupport de Camel 2.x usa JUnit 4 -->
+        <junit.version>4.12</junit.version>
+
+        <!-- Compilación Java 8, recomendada para estos ejemplos antiguos de Camel 2.x -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <!-- Codificación del proyecto -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
     </properties>
+
+    <dependencies>
+
+        <!--
+            Núcleo de Apache Camel.
+            Incluye CamelContext, RouteBuilder, Exchange, Processor, rutas Java DSL, etc.
+        -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-core</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+
+        <!--
+            Soporte de Camel con Spring.
+            Necesario para ejemplos que usan camel-context.xml o rutas declaradas en XML.
+        -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-spring</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+
+        <!--
+            Componente JMS de Camel.
+            Permite usar endpoints como:
+                jms:incomingOrders
+                jms:queue:orders
+        -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-jms</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+
+        <!--
+            ActiveMQ completo.
+            Incluye cliente JMS y broker embebido, necesario para:
+                new ActiveMQConnectionFactory("vm://localhost")
+        -->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-all</artifactId>
+            <version>${activemq.version}</version>
+        </dependency>
+
+        <!--
+            XBean Spring.
+            Útil para ejemplos antiguos donde ActiveMQ se configura mediante XML/Spring.
+        -->
+        <dependency>
+            <groupId>org.apache.xbean</groupId>
+            <artifactId>xbean-spring</artifactId>
+            <version>${xbean.version}</version>
+        </dependency>
+
+        <!--
+            Spring Context.
+            Proporciona ApplicationContext, carga de beans XML, etc.
+        -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!--
+            Soporte de testing de Camel.
+            Necesario para usar:
+                CamelTestSupport
+                getMockEndpoint(...)
+                assertMockEndpointsSatisfied()
+        -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test</artifactId>
+            <version>${camel.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+            JUnit 4.
+            Necesario para @Test y para ejecutar los tests con Maven Surefire.
+        -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+            Binding de SLF4J hacia Log4j.
+            Permite que los logs de Camel, ActiveMQ y Spring salgan por consola.
+        -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <!--
+            Implementación Log4j 1.x usada por slf4j-log4j12.
+            Es antigua, pero encaja con los ejemplos del libro.
+        -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <!--
+                Compilador Java.
+                Fuerza compilación con nivel Java 8, aunque tengas un JDK más moderno instalado.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+
+            <!--
+                Plugin que ejecuta los tests.
+                Permite lanzar:
+                    mvn test
+                    mvn test -Dtest=FtpToJMSWithDynamicToTest
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+
+                    <!-- No falla si un módulo no tiene tests -->
+                    <failIfNoTests>false</failIfNoTests>
+
+                    <!-- Ejecuta clases cuyo nombre termina en Test.java -->
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+
+                </configuration>
+            </plugin>
+
+            <!--
+                Plugin de Camel para ejecutar rutas desde Maven.
+                Útil para ejemplos con:
+                    mvn camel:run
+            -->
+            <plugin>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-maven-plugin</artifactId>
+                <version>${camel.version}</version>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>
