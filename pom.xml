@@ -129,6 +129,31 @@
         </dependency>
 
         <!--
+            Soporte de testing de Camel con Spring XML.
+            Necesario para usar:
+                CamelSpringTestSupport
+                ClassPathXmlApplicationContext(...)
+        -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test-spring</artifactId>
+            <version>${camel.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+            Utilidades de testing de Spring.
+            Se declara explícitamente para mantener alineada la versión con spring-context.
+        -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!--
             JUnit 4.
             Necesario para @Test y para ejecutar los tests con Maven Surefire.
         -->
