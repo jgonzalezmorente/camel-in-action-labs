@@ -44,7 +44,9 @@ public class OrderRouterTest extends CamelTestSupport {
 
                 from("jms:incomingOrders")
                         .choice()
-                            .when(header("CamelFileName").endsWith(".xml"))
+//                            .when(header("CamelFileName").endsWith(".xml"))
+//                                .to("jms:xmlOrders")
+                            .when(simple("${header.CamelFileName} ends with 'xml'"))
                                 .to("jms:xmlOrders")
                             .when(header("CamelFileName").endsWith(".csv"))
                                 .to("jms:csvOrders");
