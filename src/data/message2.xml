@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<order>
+    <id>1001</id>
+    <customer>ACME Corp</customer>
+    <date>2026-06-02</date>
+    <items>
+        <item>
+            <sku>BOOK-001</sku>
+            <description>Camel in Action</description>
+            <quantity>1</quantity>
+        </item>
+    </items>
+</order>
