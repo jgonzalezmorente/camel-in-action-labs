@@ -1,11 +1,10 @@
 package chapter03;
 
+import java.io.File;
 import org.apache.camel.test.spring.CamelSpringTestSupport;
 import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import java.io.File;
 
 public class SpringOrderToCsvBeanTest extends CamelSpringTestSupport {
     @Override

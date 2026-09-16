@@ -6,12 +6,10 @@ import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-
 public class SpringOrderToCsvProcessorTest extends CamelSpringTestSupport {
     @Override
     protected AbstractApplicationContext createApplicationContext() {
         return new ClassPathXmlApplicationContext("chapter03/SpringOrderToCsvProcessorTest.xml");
-
     }
 
     @Test

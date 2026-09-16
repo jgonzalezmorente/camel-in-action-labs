@@ -14,7 +14,4 @@
             <to uri="file://target/orders/received?fileName=report-${header.Date}-xml-dsl.csv"/>
         </route>
     </camelContext>
-
-
-
 </beans>
