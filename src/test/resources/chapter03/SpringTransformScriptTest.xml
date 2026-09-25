@@ -5,13 +5,13 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-    <bean id="csvBean" class="chapter03.beans.OrderToCsvBean"/>
-
-    <camelContext trace="true" xmlns="http://camel.apache.org/schema/spring">
+    <camelContext trace="true" id="camel" xmlns="http://camel.apache.org/schema/spring">
         <route>
-            <from uri="direct:start" />
-            <bean ref="csvBean"/>
-            <to uri="file://target/orders/received?fileName=report-${header.Date}-spring.csv"/>
+            <from uri="direct:start"/>
+            <transform>
+                <simple>Hello ${body} how are you?</simple>
+            </transform>
+            <to uri="mock:result"/>
         </route>
     </camelContext>
 </beans>
