@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <bean id="csvAggregationStrategy" class="chapter03.aggregation.CsvAggregationStrategy"/>
+
+    <camelContext trace="true" id="camel" xmlns="http://camel.apache.org/schema/spring">
+        <route id="enrich-orders">
+            <from uri="direct:enrich"/>
+            <log message="[ENRICH] Antes de consultar: ${body}"/>
+            <enrich strategyRef="csvAggregationStrategy">
+                <constant>direct:additionalOrders</constant>
+            </enrich>
+            <log message="[ENRICH] Después de agregar: ${body}"/>
+            <to uri="mock:enrich"/>
+        </route>
+
+        <route id="additional-orders-service">
+            <from uri="direct:additionalOrders"/>
+            <log message="[SERVICIO] Petición recibida: ${body}"/>
+            <setBody>
+                <constant>1002,2026-10-03,C002</constant>
+            </setBody>
+            <log message="[SERVICE] Respuesta enviada: ${body}"/>
+        </route>
+
+        <route id="poll-enrich-orders">
+            <from uri="direct:pollEnrich"/>
+            <log message="[POLL ENRICH] Original: ${body}" />
+            <log message="[POLL ENRICH] Recogiendo de SEDA sin esperara nuevos mensajes."/>
+            <pollEnrich timeout="0" strategyRef="csvAggregationStrategy">
+                <constant>seda:additionalOrders</constant>
+            </pollEnrich>
+            <log message="[POLL ENRICH] Resultado: ${body}"/>
+            <to uri="mock:pollEnrich"/>
+        </route>
+    </camelContext>
+</beans>
