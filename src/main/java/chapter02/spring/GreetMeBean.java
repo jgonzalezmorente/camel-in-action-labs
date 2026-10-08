@@ -1,6 +1,6 @@
 package chapter02.spring;
 
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class GreetMeBean {
@@ -15,9 +15,11 @@ public class GreetMeBean {
     }
 
     public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+        ConfigurableApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
 
         GreetMeBean bean = (GreetMeBean) context.getBean("greetMeBean");
         bean.execute();
+        context.close();
+
     }
 }
