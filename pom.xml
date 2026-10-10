@@ -114,6 +114,22 @@
             <version>${spring.version}</version>
         </dependency>
 
+        <!-- Conversión entre objetos Java y XML mediante XStream -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-xstream</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+
+        <!--
+            Conversión entre objetos Java y XML mediante JAXB
+        -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-jaxb</artifactId>
+            <version>${camel.version}</version>
+        </dependency>
+
         <!--
             Soporte de testing de Camel.
             Necesario para usar:
